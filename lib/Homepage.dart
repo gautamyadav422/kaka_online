@@ -1,8 +1,9 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:kaka_online/Drawer.dart';
 import 'package:kaka_online/Oder.dart';
+import 'package:kaka_online/PagesDrawer/Contact.dart';
 import 'package:kaka_online/list.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -10,106 +11,144 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
+  Future<bool> _onBackPresses() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Do you really want to exit the app"),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("No"),
+          ),
+          FlatButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("Yes"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        drawer: Drawer(
-
-        ),
-        appBar: AppBar(
-          title: Image(
-            image: AssetImage("assets/images/a1.png"),
-            height: 80,
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.black87,
-
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              MainList(),
-              Container(
-                child: Column(
-                  children: [
-                    MainContainer(
-                        image: "assets/images/a21.jpg",
-                        titleText: "Alamgir Hotel",
-                        subTitle:
-                        "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
-                        icon: Icons.star,
-                        rating: "3.8",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                    MainContainer(
-                        image: "aassets/images/d1.jpg",
-                        titleText: "Celebrations By Onlinekaka",
-                        subTitle:
-                        "Flowers, cakes, Hazratganj, Lucknow UP-226001",
-                        icon: Icons.star,
-                        rating: "5.0",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                    MainContainer(
-                        image: "assets/images/d2.jpeg",
-                        titleText: "Mubeens",
-                        subTitle:
-                        "Akbari Gate,Chowk Lucknow UP 226003",
-                        icon: Icons.star,
-                        rating: "4.8",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                    MainContainer(
-                        image: "assets/images/d3.png",
-                        titleText: "Shabaan Tikka",
-                        subTitle:
-                        "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
-                        icon: Icons.star,
-                        rating: "4.1",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                    MainContainer(
-                        image: "assets/images/d4.jpg",
-                        titleText: "Tunday Kababi",
-                        subTitle:
-                        "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
-                        icon: Icons.star,
-                        rating: "3.8",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                    MainContainer(
-                        image: "assets/images/d5.png",
-                        titleText: "OnlineKaka",
-                        subTitle:
-                        "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
-                        icon: Icons.star,
-                        rating: "5.0",
-                        minOrder: "MIN-ORDER: ₹99",
-                        buttonText: "open"),
-                  ],
+      child: WillPopScope(
+        onWillPop: _onBackPresses,
+        child: Scaffold(
+            drawer: DrawerPage(),
+            appBar: AppBar(
+              iconTheme: IconThemeData(color: Colors.green),
+              title: Image(
+                image: AssetImage("assets/images/a1.png"),
+                height: 80,
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.black87,
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    launch("tel://+91 9930782439");
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Icon(Icons.add_ic_call),
+                  ),
                 ),
-              )
-
-            ],
-          ),
-        )
-
+                GestureDetector(
+                  onTap: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => ContactPage())),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Icon(Icons.logout),
+                  ),
+                )
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  MainList(),
+                  Container(
+                    child: Column(
+                      children: [
+                        MainContainer(
+                            image: "assets/images/a21.jpg",
+                            titleText: "Alamgir Hotel",
+                            subTitle:
+                                "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
+                            icon: Icons.star,
+                            rating: "3.8",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                        MainContainer(
+                            image: "assets/images/d4.jpg",
+                            titleText: "Celebrations By Onlinekaka",
+                            subTitle:
+                                "Flowers, cakes, Hazratganj, Lucknow UP-226001",
+                            icon: Icons.star,
+                            rating: "5.0",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                        MainContainer(
+                            image: "assets/images/d2.jpeg",
+                            titleText: "Mubeens",
+                            subTitle: "Akbari Gate,Chowk Lucknow UP 226003",
+                            icon: Icons.star,
+                            rating: "4.8",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                        MainContainer(
+                            image: "assets/images/d3.png",
+                            titleText: "Shabaan Tikka",
+                            subTitle:
+                                "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
+                            icon: Icons.star,
+                            rating: "4.1",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                        MainContainer(
+                            image: "assets/images/d4.jpg",
+                            titleText: "Tunday Kababi",
+                            subTitle:
+                                "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
+                            icon: Icons.star,
+                            rating: "3.8",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                        MainContainer(
+                            image: "assets/images/d5.png",
+                            titleText: "OnlineKaka",
+                            subTitle:
+                                "Mughlai, Kebabs, Biryani Naaz Cinema Road,Aminabad Lucknow UP 226018",
+                            icon: Icons.star,
+                            rating: "5.0",
+                            minOrder: "MIN-ORDER: ₹99",
+                            buttonText: "open"),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )),
       ),
-
     );
   }
+
   Widget MainContainer(
       {String image,
-        String titleText,
-        String subTitle,
-        IconData icon,
-        String rating,
-        String minOrder,
-        String buttonText}) {
+      String titleText,
+      String subTitle,
+      IconData icon,
+      String rating,
+      String minOrder,
+      String buttonText}) {
     return GestureDetector(
-      onTap: (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Odermain()));
+      onTap: () {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Odermain()));
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -184,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor:
-                          MaterialStateProperty.all(Colors.green)),
+                              MaterialStateProperty.all(Colors.green)),
                       onPressed: () {},
                       child: Text(buttonText),
                     )
@@ -197,5 +236,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
 }

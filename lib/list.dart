@@ -37,7 +37,7 @@ class _MainListState extends State<MainList> {
             ),
             Positioned(
               top: 100,
-              left: 50,
+              left: 25,
               child: Text(
                 "Order from restaurants you love!",
                 style: TextStyle(
@@ -48,7 +48,7 @@ class _MainListState extends State<MainList> {
             ),
             Positioned(
               top: 150,
-              left: 50,
+              left: 35,
               child: Container(
                 child: Column(
                   children: [
