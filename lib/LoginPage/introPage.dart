@@ -14,6 +14,7 @@ class _IntroPageState extends State<IntroPage> {
     // TODO: implement initState
     super.initState();
     slides.add(Slide(
+      title: "shfjkd"
 
 
     ),);
