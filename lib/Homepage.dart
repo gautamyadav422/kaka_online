@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kaka_online/Drawer.dart';
+import 'package:kaka_online/LoginPage/Login.dart';
+import 'package:kaka_online/LoginPage/alerts.dart';
 import 'package:kaka_online/Oder.dart';
 import 'package:kaka_online/PagesDrawer/Contact.dart';
 import 'package:kaka_online/list.dart';
@@ -11,19 +14,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   Future<bool> _onBackPresses() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Do you really want to exit the app"),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text("No"),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text("Yes"),
           ),
@@ -58,8 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => ContactPage())),
+                  onTap: ()async{
+                    final action = await AlertDialogs.yesCancelDialog(context, 'Logout', 'Are you sure want to logout');
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Icon(Icons.logout),

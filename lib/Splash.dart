@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kaka_online/Homepage.dart';
+import 'package:kaka_online/LoginPage/introPage.dart';
 
 class SpashScreen extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _SpashScreenState extends State<SpashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(seconds: 3), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        context, MaterialPageRoute(builder: (context) => IntroPage()));
   }
 
   @override
