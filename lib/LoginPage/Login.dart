@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kaka_online/Homepage.dart';
+
+import 'package:kaka_online/LoginPage/constant.dart';
 import 'package:kaka_online/LoginPage/registration_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,6 +9,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String name, email, phone;
+  //TextController to read text entered in text field
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   Future<bool> _onBackPresses() {
     return showDialog(
       context: context,
@@ -26,62 +33,77 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: WillPopScope(
-        onWillPop: _onBackPresses,
-        child: Scaffold(
-          backgroundColor: Color(0xFFFCEEE5),
-          appBar: AppBar(
-            title: Text('Login Page'),
-            centerTitle: true,
-          ),
-          body: SingleChildScrollView(
+        child: WillPopScope(
+      onWillPop: _onBackPresses,
+      child: Scaffold(
+        backgroundColor: Color(0xFFFCEEE5),
+        appBar: AppBar(
+          title: Text('Login Page'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formkey,
             child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 60.0),
-                  child: Center(
-                    child: Container(
-                      width: 200,
-                      height: 150,
-                      /*decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(50.0)),*/
-                      child: CircleAvatar(
-                          radius: (52),
-                          backgroundColor: Colors.white,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.asset("assets/images/a2.png"),
-                          )),
-                    ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                CircleAvatar(
+                  radius: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.asset("assets/images/a2.png"),
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 15,
                 ),
                 Padding(
-                  //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                        hintText: 'Enter valid email id as abc@gmail.com'),
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: buildInputDecoration(Icons.email, "Email"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please a Enter';
+                      }
+                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                          .hasMatch(value)) {
+                        return 'Please a valid Email';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      email = value;
+                    },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 15, bottom: 0),
-                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                        hintText: 'Enter secure password'),
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    controller: password,
+                    keyboardType: TextInputType.text,
+                    decoration: buildInputDecoration(Icons.lock, "Password"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please a Enter Password';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 TextButton(
@@ -93,30 +115,31 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.blue, fontSize: 15),
                   ),
                 ),
-                Container(
+                SizedBox(
+                  width: 200,
                   height: 50,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ElevatedButton(
+                  child: RaisedButton(
+                    color: Colors.redAccent,
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => MyHomePage()));
+                      if (_formkey.currentState.validate()) {
+                        return;
+                      } else {}
                     },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        side: BorderSide(color: Colors.blue, width: 2)),
+                    textColor: Colors.white,
+                    child: Text("Login"),
                   ),
                 ),
                 SizedBox(
-                  height: 50,
+                  height: 10,
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => RegistrationPage()),
+                      MaterialPageRoute(
+                          builder: (context) => RegistrationPage()),
                       (_) => false,
                     );
                   },
@@ -130,6 +153,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
+    )
+        );
   }
 }

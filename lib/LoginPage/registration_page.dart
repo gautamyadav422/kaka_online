@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kaka_online/LoginPage/Login.dart';
+import 'package:kaka_online/LoginPage/constant.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -8,120 +9,189 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  String name, email, phone;
+  //TextController to read text entered in text field
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  Future<bool> _onBackPresses() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Do you really want to exit the app"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("No"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("Yes"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return WillPopScope(
+      onWillPop: _onBackPresses,
+      child: SafeArea(
+          child: Scaffold(
         backgroundColor: Color(0xFFFCEEE5),
         appBar: AppBar(
-          title: Text('Ragistration Page'),
+          title: Text('Login Page'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 60.0),
-                child: Center(
-                  child: Container(
-                    width: 200,
-                    height: 150,
-                    /*decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(50.0)),*/
-                    child: CircleAvatar(
-                        radius: (52),
-                        backgroundColor: Colors.white,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset("assets/images/a2.png"),
-                        )),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                CircleAvatar(
+                  radius: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.asset("assets/images/a2.png"),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      hintText: 'Enter valid email id as abc@gmail.com'),
+                SizedBox(
+                  height: 15,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, right: 15.0, top: 15, bottom: 0),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
-                      hintText: 'Enter secure password'),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: buildInputDecoration(Icons.person, "Full Name"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter Name';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      name = value;
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, right: 15.0, top: 15, bottom: 0),
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Confirm-Password',
-                      hintText: 'Enter secure Confirm-password'),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: buildInputDecoration(Icons.email, "Email"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please a Enter';
+                      }
+                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                          .hasMatch(value)) {
+                        return 'Please a valid Email';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      email = value;
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                height: 50,
-                width: 250,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20)),
-                child: ElevatedButton(
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: buildInputDecoration(Icons.phone, "Phone No"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please enter phone no ';
+                      }
+                      return null;
+                    },
+                    onSaved: (String value) {
+                      phone = value;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    controller: password,
+                    keyboardType: TextInputType.text,
+                    decoration: buildInputDecoration(Icons.lock, "Password"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please a Enter Password';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+                  child: TextFormField(
+                    controller: confirmpassword,
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    decoration:
+                        buildInputDecoration(Icons.lock, "Confirm Password"),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please re-enter password';
+                      }
+                      print(password.text);
+                      print(confirmpassword.text);
+                      if (password.text != confirmpassword.text) {
+                        return "Password does not match";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 200,
+                  height: 50,
+                  child: RaisedButton(
+                    color: Colors.redAccent,
+                    onPressed: () {
+                      if (_formkey.currentState.validate()) {
+                        return;
+                      } else {}
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                        side: BorderSide(color: Colors.blue, width: 2)),
+                    textColor: Colors.white,
+                    child: Text("Register"),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => LoginPage(),
-                      ),
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      (_) => false,
                     );
                   },
                   child: Text(
-                    'Register',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    "Already have account? Click Here",
+                    style: TextStyle(color: Colors.blue, fontSize: 15),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => LoginPage()
-                    ),
-                        (_) => false,
-                  );
-                },
-                child: Text(
-                  'Already have account? Click Here',
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+      )),
     );
   }
 }
