@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:kaka_online/Homepage.dart';
 import 'package:kaka_online/LoginPage/constant.dart';
+import 'package:kaka_online/LoginPage/introPage.dart';
 import 'package:kaka_online/LoginPage/registration_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,12 +11,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String name, email, phone;
-  //TextController to read text entered in text field
-  TextEditingController password = TextEditingController();
-  TextEditingController confirmpassword = TextEditingController();
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _validate = false;
   Future<bool> _onBackPresses() {
     return showDialog(
       context: context,
@@ -38,122 +37,151 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    shrePreference();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: WillPopScope(
+    return WillPopScope(
       onWillPop: _onBackPresses,
-      child: Scaffold(
-        backgroundColor: Color(0xFFFCEEE5),
-        appBar: AppBar(
-          title: Text('Login Page'),
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formkey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                CircleAvatar(
-                  radius: 70,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset("assets/images/a2.png"),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Login Page"),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
-                  child: TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: buildInputDecoration(Icons.email, "Email"),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please a Enter';
-                      }
-                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                          .hasMatch(value)) {
-                        return 'Please a valid Email';
-                      }
-                      return null;
-                    },
-                    onSaved: (String value) {
-                      email = value;
-                    },
+                  CircleAvatar(
+                    radius: 70,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.asset("assets/images/a2.png"),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 15, left: 10, right: 10),
-                  child: TextFormField(
-                    controller: password,
-                    keyboardType: TextInputType.text,
-                    decoration: buildInputDecoration(Icons.lock, "Password"),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please a Enter Password';
-                      }
-                      return null;
-                    },
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    //TODO FORGOT PASSWORD SCREEN GOES HERE
-                  },
-                  child: Text(
-                    'Forgot Password',
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
+                  TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      hintText: "Please enter your email address",
+                      errorText:
+                          _validate ? 'Please enter your email address' : null,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF054715), width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF054715), width: 3.0),
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 200,
-                  height: 50,
-                  child: RaisedButton(
-                    color: Colors.redAccent,
-                    onPressed: () {
-                      if (_formkey.currentState.validate()) {
-                        return;
-                      } else {}
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                        hintText: "Please enter your Password",
+                        errorText:
+                            _validate ? 'Please enter your Password' : null,
+                        // errorText: _validate ? 'Password Can\'t Be Empty' : null,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF054715), width: 2.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF054715), width: 3.0),
+                        ),
+                        border: OutlineInputBorder()),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+
+                      prefs.setString("email", emailController.text);
+                      prefs.setString("password", passwordController.text);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext ctx) => MyHomePage()));
+                      // final SharedPreferences shrepref = await SharedPreferences.getInstance();
+                      // shrepref.getString('email',emailController.text);
+                      // emailController.text.isEmpty
+                      //     ? _validate = true
+                      //     : Navigator.pushReplacement(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => MyHomePage()));
                     },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                        side: BorderSide(color: Colors.blue, width: 2)),
-                    textColor: Colors.white,
                     child: Text("Login"),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => RegistrationPage()),
-                      (_) => false,
-                    );
-                  },
-                  child: Text(
-                    "Dont't have a account? Click Here",
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-              ],
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => RegistrationPage()),
+                        (_) => false,
+                      );
+                    },
+                    child: Text(
+                      "Don't have account? Click Here",
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    )
-        );
+    );
   }
+
+  shrePreference() async {
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.getString("email") == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext ctx) => LoginPage(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext ctx) => MyHomePage(),
+          ),
+        );
+      }
+    }
+
 }

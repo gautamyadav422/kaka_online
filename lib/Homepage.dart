@@ -6,6 +6,7 @@ import 'package:kaka_online/LoginPage/alerts.dart';
 import 'package:kaka_online/Oder.dart';
 import 'package:kaka_online/PagesDrawer/Contact.dart';
 import 'package:kaka_online/list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -59,8 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: ()async{
-                    final action = await AlertDialogs.yesCancelDialog(context, 'Logout', 'Are you sure want to logout');
+                  onTap: () async {
+                    final action = await AlertDialogs.yesCancelDialog(
+                        context, 'Logout', 'Are you sure want to logout');
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
