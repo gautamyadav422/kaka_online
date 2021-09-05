@@ -168,12 +168,12 @@ class _LoginPageState extends State<LoginPage> {
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (prefs.getString("email") == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext ctx) => LoginPage(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (BuildContext ctx) => LoginPage(),
+        // //   ),
+        // );
       } else {
         Navigator.pushReplacement(
           context,

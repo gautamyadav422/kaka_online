@@ -61,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.clear();
                     final action = await AlertDialogs.yesCancelDialog(
                         context, 'Logout', 'Are you sure want to logout');
                   },
